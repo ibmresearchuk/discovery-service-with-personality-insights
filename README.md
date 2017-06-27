@@ -12,21 +12,21 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
 1. Connect to Bluemix with the command line tool.
 
     ```sh
-    cf api https://api.eu-gb.bluemix.net
-    cf login -u <your user ID>
+    bx api https://api.eu-gb.bluemix.net
+    bx login -u <your user ID>
     ```
 
 1. Create an instance of the Discovery service (if you have a trial account, replace `standard` with `free`):
 
     ```sh
-    cf create-service discovery standard my-discovery-service
+    bx service create discovery standard my-discovery-service
     ```
 
 1. Create and retrieve service keys to access your instance of the Discovery service:
 
     ```sh
-    cf create-service-key my-discovery-service myKey
-    cf service-key my-discovery-service myKey
+    bx service key-create my-discovery-service myKey
+    bx service key-show my-discovery-service myKey
     ```
 
 1. The project needs to be configured to work with your instances of the Watson Discovery Services. Rename `.env.template` to `.env`. Fill in `.env` with your service instance information. The `.env` file will look something like the following:
@@ -37,13 +37,13 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
     DISCOVERY_ENVIRONMENT_ID=
     DISCOVERY_COLLECTION_ID=
     DISCOVERY_CONFIGURATION_ID=
-    DISCOVERY_VERSION=2016-12-01
+    DISCOVERY_VERSION=2016-11-07
     ```
 
 1. Use the `GET /v1/environments` method to get the environment ID of your Discovery service instance.
 
     ```sh
-    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments?version=2016-12-01"
+    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments?version=2016-11-07"
     ```
     ```sh
     {
@@ -64,7 +64,7 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
 1. Use the `GET /v1/environments/{environment_id}/collections` method to get the collection ID and configuration ID of your Watson News Environment instance.
 
     ```sh
-    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/{environment_id}/collections?version=2016-12-01"
+    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/{environment_id}/collections?version=2016-11-07"
     ```
     ```sh
     {
@@ -89,7 +89,7 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
     DISCOVERY_ENVIRONMENT_ID=<environment_id>
     DISCOVERY_COLLECTION_ID=<collection_id>
     DISCOVERY_CONFIGURATION_ID=<configuration_id>
-    DISCOVERY_VERSION=2016-12-01
+    DISCOVERY_VERSION=2016-11-07
     ```
 
 Get more help [Getting started with the Discovery API](https://www.ibm.com/watson/developercloud/doc/discovery/getting-started.html)
@@ -129,7 +129,7 @@ Use the `-n` flag to pass in a name to search on. Use the -`d` flag to specify a
   ```sh
   ./analysis.sh -n Federer -d results
   ```
-The analysis of this query have been output as comma separated values to `result/result.csv`.
+The analysis of this query have been output as comma separated values to `results/Federer.csv`.
   ```none
   "name","hits","hits_negative","hits_positive","hits_neutral"
   "federer",50,14,28,8
@@ -143,13 +143,15 @@ Use the `-q` flag to look for quotes about a particular person. The following qu
   ```sh
   ./analysis.sh -n Federer -d results -q
   ```
-The analysis of this query have been output as comma separated values to `result/result.csv`.
+The analysis of this query have been output as comma separated values to `results/Federer.csv`.
   ```none
   "name","hits","hits_negative","hits_positive","hits_neutral"
   "federer",65,19,0,46
   ```
 
 The application has analysed the sentiment of each quote found about `Federer`. In total, there were 65 quotes found, 19 of these had a negative sentiment, zero had a positive sentiment and 46 had a neutral sentiment.
+
+To output the quotes returned from Watson Discovery Service to the console, uncomment `console.dir(data);` on Line 22 in `analysis-quotes.js`.
 
 ### How Watson Discovery Service works
 The IBM Watson&trade;Discovery service offers powerful content search capabilities using the [Discovery Query Language](https://www.ibm.com/watson/developercloud/doc/discovery/query-reference.html). In this application, a query object is formed in `discoveryQuery.js`, before using the node.js `request` library to send an HTTP GET to the specified endpoint:
@@ -208,47 +210,47 @@ The IBM Watson&trade; Personality Insights service allows applications to derive
 To use the IBM Watson&trade; Discovery Service together with the IBM Watson&trade; Personality Insights service, complete the following steps in addition to the Prerequisites steps stated above:
 1. Connect to Bluemix with the command line tool.
 
-      ```sh
-      cf api https://api.eu-gb.bluemix.net
-      cf login -u <your user ID>
-      ```
+    ```sh
+    bx api https://api.eu-gb.bluemix.net
+    bx login -u <your user ID>
+    ```
 
 1. Create the Personality Insights service in Bluemix (if you have a trial account, replace `tiered` with `lite`)
 
-      ```sh
-      cf create-service personality_insights tiered my-personality-insights-service
-      ```
+    ```sh
+    bx service create personality_insights tiered my-personality-insights-service
+    ```
 
 1. Create and retrieve service keys to access your instance of the Personality Insights service:
 
-      ```sh
-      cf create-service-key my-personality-insights-service myKey
-      cf service-key my-personality-insights-service myKey
-      ```
-      
+    ```sh
+    bx service key-create my-personality-insights-service myKey
+    bx service key-show my-personality-insights-service myKey
+    ```
+
 1. The project needs to be configured to work with your instances of the Watson Personality Insights Services. You will have previously renamed `.env.template` to `.env`. Fill in `.env` with your service instance information. The `.env` file will look something like the following:
 
-      ```none
-      DISCOVERY_USERNAME=<username>
-      DISCOVERY_PASSWORD=<password>
-      DISCOVERY_ENVIRONMENT_ID=<environment_id>
-      DISCOVERY_COLLECTION_ID=<collection_id>
-      DISCOVERY_CONFIGURATION_ID=<configuration_id>
-      DISCOVERY_VERSION=2016-12-01
-      PERSONALITY_URL=https://gateway.watsonplatform.net/personality-insights/api/v3/profile
-      PERSONALITY_USERNAME=<personality-insights-serivce-username>
-      PERSONALITY_PASSWORD=<personality-insights-serivce-password>
-      PERSONALITY_VERSION=2016-10-20
-      ```
+    ```none
+    DISCOVERY_USERNAME=<username>
+    DISCOVERY_PASSWORD=<password>
+    DISCOVERY_ENVIRONMENT_ID=<environment_id>
+    DISCOVERY_COLLECTION_ID=<collection_id>
+    DISCOVERY_CONFIGURATION_ID=<configuration_id>
+    DISCOVERY_VERSION=2016-11-07
+    PERSONALITY_URL=https://gateway.watsonplatform.net/personality-insights/api/v3/profile
+    PERSONALITY_USERNAME=<personality-insights-serivce-username>
+    PERSONALITY_PASSWORD=<personality-insights-serivce-password>
+    PERSONALITY_VERSION=2016-10-20
+    ```
 
 Get more help [Getting started with the Personality Insights API](https://www.ibm.com/watson/developercloud/doc/personality-insights/getting-started.html)
 
 Use the `-p` flag with the `-q` flag to analyse the personality of a particular person. The following query will retrieve quotes  from the Watson Discovery New dataset about the tennis player Roger Federer, before sending them to your instance of the Personality Insights service:
 
   ```sh
-  ./analysis.sh -e passion -n Federer -d results -q -p
+  ./analysis.sh -n Federer -d results -q -p
   ```
-The analysis of this query have been output as comma separated values to `result/result.csv`.
+The analysis of this query have been output as comma separated values to `results/Federer.csv`.
 
   ```none
   "name","openness","emotionalRange","conscientiousness","agreeableness","extraversion"
@@ -256,6 +258,8 @@ The analysis of this query have been output as comma separated values to `result
   ```
 
 The application has analysed the personality of the quotes found about `Federer` using the Personality Insights service and provided values for the [Big Five](https://www.ibm.com/watson/developercloud/doc/personality-insights/models.html#outputBigFive) personality characteristics. The percentile returned for each characteristic reports the `Federer's` normalized score for that characteristic; the Personality Insights service computes the percentile by comparing the author's results with the results from a sample population.
+
+To output the quotes returned from Watson Discovery Service to the console, uncomment `console.dir(data);` on Line 22 in `analysis-quotes.js`.
 
 # Using Vagrant to run this application
 A vagrant file in this project creates a Virtual Machine configured to run this project.

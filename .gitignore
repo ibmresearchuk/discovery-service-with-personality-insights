@@ -12,4 +12,3 @@ node_modules
 .DS_Store
 .env
 .vagrant
-.eslintrc.json

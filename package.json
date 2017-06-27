@@ -1,5 +1,5 @@
 {
-  "name": "sports-personalities",
+  "name": "Watson Discovery Service with Personality Insights",
   "version": "1.0.0",
   "description": "Analytics for Watson Discovery News data",
   "main": "index.js",

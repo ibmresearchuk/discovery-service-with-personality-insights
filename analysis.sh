@@ -8,7 +8,7 @@ var analysisPersonality = require('./analysis-personality');
 program
   .version('1.0.0')
   .description('Cognitive analysis of Watson Discovery News data.')
-  .option('-n, --person [person]', 'Athlete name.')
+  .option('-n, --person [person]', 'Person name.')
   .option('-d, --dir [dir]', 'Directory to output results to.')
   .option('-q, --quotes [quotes]', 'Use Watson Discovery Service to find quotes.')
   .option('-p, --personality [personality]', 'Use Watson Personality Insights.')
@@ -29,7 +29,7 @@ if(program.dir !==true && program.dir){
     }
   }
   else{
-    console.log('Error: Athlete name needs to be specified using the -n flag.  e.g. ./anaysis.sh -n murray');
+    console.log('Error: Person name needs to be specified using the -n flag.  e.g. ./anaysis.sh -n murray');
     console.log('Or use -h for help.');
 
   }

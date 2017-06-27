@@ -22,7 +22,7 @@ function analyse(name, dir){
       //console.dir(data);
 
       // Write data to file as CSV
-      utils.writeCsvDataTofile(dir + '/results.csv',data, ['name','hits','hits_negative','hits_positive', 'hits_neutral'], function(writeErr){
+      utils.writeCsvDataTofile(dir + '/' + name + '.csv',data, ['name','hits','hits_negative','hits_positive', 'hits_neutral'], function(writeErr){
         if(writeErr){
           console.log(writeErr);
         }

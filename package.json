@@ -1,5 +1,5 @@
 {
-  "name": "Watson Discovery Service with Personality Insights",
+  "name": "Watson-Discovery-Service-with-Personality-Insights",
   "version": "1.0.0",
   "description": "Analytics for Watson Discovery News data",
   "main": "index.js",
@@ -21,7 +21,6 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.18.1",
     "natural": "^0.5.1",
-    "request": "^2.81.0",
-    "dotenv": "^4.0.0"
+    "request": "^2.81.0"
   }
 }

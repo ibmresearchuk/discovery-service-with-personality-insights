@@ -7,7 +7,7 @@ var piQuery = require('./piQuery');
  * @param {String} dir - path to output results to
 */
 function analyse(name, dir){
-  console.log('Analysing personality using Watson Personality Insights. \nRunning analysis on Watson Discovery News data and retrieving quotes. Querying ' + name + '. Results output to: ' + dir+'/results.csv');
+  console.log('Analysing personality using Watson Personality Insights. \nRunning analysis on Watson Discovery News data and retrieving quotes. Querying ' + name + '. Results output to: ' + dir+'/' + name + '.csv');
 
   // Analyse personality from quotes about a person
   analysePersonalityFromQuotes(name, writeResultToFile);

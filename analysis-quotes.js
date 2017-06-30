@@ -7,7 +7,7 @@ var utils = require('./utils');
  * @param {String} dir - path to output results to
 */
 function analyse(name, dir){
-  console.log('Running analysis on Watson Discovery News dataset and retrieving quotes. Querying ' + name + '.\nResults output to: ' + dir+'/results.csv');
+  console.log('Running analysis on Watson Discovery News dataset and retrieving quotes. Querying ' + name + '.\nResults output to: ' + dir+'/' + name + '.csv');
 
   // Analyse quotes about a person
   analyseQuotes(name, writeResultToFile);

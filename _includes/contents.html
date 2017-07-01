@@ -1,0 +1,17 @@
+<div class="page-accent">
+  <nav class="contents">
+    <h2>Contents</h2>
+    <ul>
+      {% for post in site.posts %}
+      <li>
+        <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">
+          <p>
+            <span class='post-title'>{{ post.title }}</span>
+            {{post.excerpt}}
+          </p>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+</div>

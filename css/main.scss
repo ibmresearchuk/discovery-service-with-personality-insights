@@ -1,0 +1,37 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+@charset "utf-8";
+
+
+// Text Settings
+$base-font-family: 'Lato', sans-serif;
+$base-font-weight: 300;
+$heavy-font-weight: 700;
+$base-font-size:   16px;
+$base-line-height: 1.25rem; /* 20px - everything needs to fit in multiples of this to maintain vertical rhythm */
+$double-line-height: 2.5rem;
+
+
+// Colour Settings
+$black-color: #111;
+$white-color: #fff;
+$accent-color: #8CBEB2;
+
+$grey-color: #c4c3c3;
+$grey-color-light: lighten($grey-color, 40%);
+$grey-color-dark:  darken($grey-color, 25%);
+$yellow-color: #fffd38;
+
+
+// Layout Settings
+$content-width: 900px;
+$spacing-unit-section: 70px;
+$spacing-unit-small: 5px;
+$spacing-unit: 20px;
+
+
+// Import partials from `sass_dir` (defaults to `_sass`)
+@import
+  "base"
+;

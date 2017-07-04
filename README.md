@@ -1,6 +1,8 @@
 # Watson Discovery Service with Personality Insights
 IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data. This node.js application demonstrates how the Discovery API can be used to build queries and perform cognitive analysis using the Watson Discovery News dataset.
 
+![Script Based Watson Discovery Service with Personality Insights](https://github.com/ibmets/discovery-service-with-personality-insights/raw/master/discovery-service-with-personality-insights.gif "Script Based Watson Discovery Service with Personality Insights")
+
 ## Prerequisites
 1. A Bluemix account. If you don't have one, [sign up](https://console.eu-gb.bluemix.net/registration/).
 

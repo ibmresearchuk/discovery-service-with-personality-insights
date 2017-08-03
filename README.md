@@ -18,10 +18,10 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
     bx login -u <your user ID>
     ```
 
-1. Create an instance of the Discovery service (if you have a trial account, replace `standard` with `free`):
+1. Create an instance of the Discovery service:
 
     ```sh
-    bx service create discovery standard my-discovery-service
+    bx service create discovery lite my-discovery-service
     ```
 
 1. Create and retrieve service keys to access your instance of the Discovery service:

@@ -66,7 +66,7 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
 1. Use the `GET /v1/environments/{environment_id}/collections` method to get the collection ID and configuration ID of your Watson News Environment instance.
 
     ```sh
-    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/{environment_id}/collections?version=2016-11-07"
+    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/{environment_id}/collections?version=2017-08-01"
     ```
     ```sh
     {

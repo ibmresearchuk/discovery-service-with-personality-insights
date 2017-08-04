@@ -16,14 +16,15 @@ var queryObject = {
  * @param {requestCallback} callback - Callback.
  */
 function getHits(name, callback){
-  console.log('Querying WDS for ' + name);
+  console.log('searching wds for ' + name);
 
   //Discovery Service query string
   queryObject.qs = {
     version: process.env.DISCOVERY_VERSION,
-    query: 'entities.text:('+name+')',
-    filter: 'entities.type:Person',
-    count: 50
+    query: 'enriched_text.entities.text:('+name+')',
+    filter: 'enriched_text.entities.type:Person',
+    sort: '-publication_date',
+    count: 50,
   };
 
   request(queryObject, handleResponse);
@@ -47,26 +48,24 @@ function getHits(name, callback){
   };
 }
 
+
 /**
- * Query Watson Discovery Service to get quotes
- * @param {String[]} names - The names a player goes by (e.g. ['Rafael Nadal', 'nadal', 'raffa']).
+ * Query Watson Discovery Service to get results
+ * @param {String} name - The names a player goes by ('Rafael Nadal').
+ * @param {String} author - The author of the article
  * @param {requestCallback} callback - Callback.
  */
-function getQuotes(name, callback){
-  console.log('Loooking for quotes');
-  console.log('Querying WDS for ' + name);
+function getHitsByAuthor(name, author, callback){
+  console.log('searching wds for ' + name);
 
-  //Discovery Service query string to retrieve quotes
+  //Discovery Service query string
   queryObject.qs = {
     version: process.env.DISCOVERY_VERSION,
-    query: 'entities.text:('+name+')',
-    filter: 'entities.type:Person,'
-          + 'entities.quotations.sentiment.type::(neutral|positive|negative)',
-    return: 'entities.quotations,'
-          + 'entities.text,'
-          + 'quotations.quotation,'
-          + 'entities.type',
-    count: 50
+    query: 'enriched_text.entities.text:'+name+','
+          +'author:'+author,
+    filter: 'enriched_text.entities.type:Person',
+    sort: '-publication_date',
+    count: 50,
   };
 
   request(queryObject, handleResponse);
@@ -86,11 +85,66 @@ function getQuotes(name, callback){
         }
       }
       return callback(false, results);
+    }
+  };
+}
+
+
+
+/**
+ * Query Watson Discovery Service to get results
+ * @param {String} name - The names a player goes by ('Rafael Nadal').
+ * @param {String} author - The author of the article
+ * @param {requestCallback} callback - Callback.
+ */
+function getSentimentByAuthor(name, author, callback){
+  console.log('aggregating wds for ' + name);
+
+  //Discovery Service query string
+  if(!author){
+    queryObject.qs = {
+      version: process.env.DISCOVERY_VERSION,
+      aggregation: 'filter(enriched_text.entities.text:'+name+','
+                  + 'enriched_text.entities.type:Person).'
+                  + 'term(enriched_text.sentiment.document.label)',
+      count:0
+    };
+  }
+  else{
+    queryObject.qs = {
+      version: process.env.DISCOVERY_VERSION,
+      aggregation: 'filter(enriched_text.entities.text:'+name+','
+                  + 'author:'+author+','
+                  + 'enriched_text.entities.type:Person).'
+                  + 'term(enriched_text.sentiment.document.label)',
+      count:0
+    };
+  }
+
+  request(queryObject, handleResponse);
+
+  // Callback from request to handle HTTP response
+  function handleResponse(err, httpResponse, body){
+    if(err){
+      console.log(err);
+      return callback(err);
+    }
+    else{
+      //console.dir(body);
+      var aggregations = [];
+      if(body){
+        var jsonBody = JSON.parse(body);
+        if(jsonBody.aggregations &&  jsonBody.aggregations[0].aggregations && jsonBody.aggregations[0].aggregations[0].results){
+          aggregations = jsonBody.aggregations[0].aggregations[0].results;
+        }
+      }
+      return callback(false, aggregations);
     }
   };
 }
 
 module.exports = {
   getHits:getHits,
-  getQuotes:getQuotes
+  getHitsByAuthor:getHitsByAuthor,
+  getSentimentByAuthor: getSentimentByAuthor
 };

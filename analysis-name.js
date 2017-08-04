@@ -1,16 +1,63 @@
 var discoveryQuery = require('./discoveryQuery');
 var utils = require('./utils');
 
+
 /**
  * Analyse person
  * @param {String} name - person name
+ * @param {String} author - author's name
  * @param {String} dir - path to output results to
 */
-function analyse(name, dir){
+function aggregateSentiment(name, author, dir){
+
+  // Analyse hits about a person
+  discoveryQuery.getSentimentByAuthor(name, author, writeResultToFile);
+
+  //Callback from analyseTerms to write results to file
+  function writeResultToFile(err, data){
+    if(err){
+      console.log(err);
+    }
+    else if(dir){
+      // Uncomment to output personality insights to to console.
+      //console.dir(data);
+      processedData = {
+        name: name
+      };
+
+
+      for(var i=0; i < data.length; i++){
+        var field = data[i].key;
+        var value = data[i].matching_results;
+        processedData[field] = value;
+      }
+
+      // Write data to file as CSV
+      utils.writeCsvDataTofile(dir + '/' + name + '.csv',processedData, ['name','negative','positive','neutral'], function(writeErr){
+        if(writeErr){
+          console.log(writeErr);
+        }
+      });
+    }
+  };
+
+}
+
+
+
+
+
+/**
+ * Analyse person
+ * @param {String} name - person name
+ * @param {String} author - author's name
+ * @param {String} dir - path to output results to
+*/
+function analyse(name, author, dir){
   console.log('Running analysis on Watson Discovery News dataset. Querying ' + name + '.\nResults output to: ' + dir+'/' + name + '.csv');
 
   // Analyse hits about a person
-  analyseHits(name, writeResultToFile);
+  analyseHits(name, author, writeResultToFile);
 
   //Callback from analyseTerms to write results to file
   function writeResultToFile(err, data){
@@ -36,7 +83,7 @@ function analyse(name, dir){
  * @param {String} names - The name of a player
  * @param {requestCallback} callback - Callback.
  */
-function analyseHits(name, callback){
+function analyseHits(name, author, callback){
   // Create variable to hold result
   var playerTerms = {
     name: name,
@@ -48,7 +95,13 @@ function analyseHits(name, callback){
   };
 
   // Call discoveryQuery.getHits to query Watson Discovery Service(WDS) to get articles
-  discoveryQuery.getHits(name, organiseResults);
+  if(!author){
+    discoveryQuery.getHits(name, organiseResults);
+  }
+  else{
+    discoveryQuery.getHitsByAuthor(name, author, organiseResults);
+  }
+
 
   // Callback from discoveryQuery.getHits to organise results from WDS
   function organiseResults(dataErr, data){
@@ -63,12 +116,14 @@ function analyseHits(name, callback){
           // Push hits to terms_hits property
           playerTerms.terms_hits.push(data[i].text);
           // Check if sentiment of hits is negative, positive or neutral
-          if(data[i].docSentiment.type == 'negative'){
-            playerTerms.hits_negative++;
-          } else if(data[i].docSentiment.type == 'positive') {
-            playerTerms.hits_positive++;
-          } else {
-            playerTerms.hits_neutral++;
+          if(data[i].enriched_text.sentiment && data[i].enriched_text.sentiment.document ){
+            if(data[i].enriched_text.sentiment && data[i].enriched_text.sentiment.document.label == 'negative'){
+              playerTerms.hits_negative++;
+            } else if(data[i].enriched_text.sentiment && data[i].enriched_text.sentiment.document.label == 'positive') {
+              playerTerms.hits_positive++;
+            } else {
+              playerTerms.hits_neutral++;
+            }
           }
         }
         // Find out the number of hits
@@ -80,5 +135,6 @@ function analyseHits(name, callback){
 }
 
 module.exports = {
-  analyse: analyse
+  analyse: analyse,
+  aggregateSentiment: aggregateSentiment
 };

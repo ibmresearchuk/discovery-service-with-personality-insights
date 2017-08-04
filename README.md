@@ -1,8 +1,6 @@
 # Watson Discovery Service with Personality Insights
 IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data. This node.js application demonstrates how the Discovery API can be used to build queries and perform cognitive analysis using the Watson Discovery News dataset.
 
-![Script Based Watson Discovery Service with Personality Insights](https://github.com/ibmets/discovery-service-with-personality-insights/raw/master/discovery-service-with-personality-insights.gif "Script Based Watson Discovery Service with Personality Insights")
-
 ## Prerequisites
 1. A Bluemix account. If you don't have one, [sign up](https://console.eu-gb.bluemix.net/registration/).
 
@@ -39,58 +37,34 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
     DISCOVERY_ENVIRONMENT_ID=
     DISCOVERY_COLLECTION_ID=
     DISCOVERY_CONFIGURATION_ID=
-    DISCOVERY_VERSION=2016-11-07
+    DISCOVERY_VERSION=2017-08-01
     ```
 
-1. Use the `GET /v1/environments` method to get the environment ID of your Discovery service instance.
+
+1. Use the `GET /v1/environments/system/collections` method to get the collection ID and configuration ID of your Watson News Environment instance.
 
     ```sh
-    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments?version=2017-08-01"
+    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/system/collections?version=2017-08-01"
     ```
     ```sh
-    {
-      "environments" : [ {
-        "environment_id" : "<environment_id>",
-        "name" : "Watson News Environment",
-        "description" : "Watson News cluster environment",
-        "created" : "2017-06-22T08:47:35.705Z",
-        "updated" : "2017-06-22T08:47:35.705Z",
-        "status" : "active",
-        "read_only" : true
-      } ]
-    }
+      {
+        "collections" : [{
+          "collection_id" : "news",
+          "name" : "news",
+          "language" : "en",
+          "status" : "active",
+          "description" : "Watson News pre-enriched collection of curated news sources v2"
+        }]
+      }
     ```
 
-    Notice that an environment already exists named `Watson News Environment`. This environment contains Watson Discovery News, a public data set that has been pre-enriched with cognitive insights, and is included with the Discovery service by default.
-
-1. Use the `GET /v1/environments/{environment_id}/collections` method to get the collection ID and configuration ID of your Watson News Environment instance.
-
-    ```sh
-    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/{environment_id}/collections?version=2017-08-01"
-    ```
-    ```sh
-    {
-      "collections" : [ {
-        "collection_id" : "<collection_id>",
-        "name" : "watson_news",
-        "configuration_id" : "<configuration_id>",
-        "language" : "en",
-        "status" : "active",
-        "description" : "Watson News pre-enriched collection of curated news sources",
-        "created" : "2017-06-22T08:47:35.705Z",
-        "updated" : "2017-06-22T08:47:35.705Z"
-      } ]
-    }
-    ```
-
-1. Fill in `.env` with your environment, collection and configuration IDs. The `.env` file will look something like the following:
+1. Fill in `.env` with your environment and collection and IDs. The `.env` file will look something like the following:
 
     ```none
     DISCOVERY_USERNAME=<username>
     DISCOVERY_PASSWORD=<password>
-    DISCOVERY_ENVIRONMENT_ID=<environment_id>
-    DISCOVERY_COLLECTION_ID=<collection_id>
-    DISCOVERY_CONFIGURATION_ID=<configuration_id>
+    DISCOVERY_ENVIRONMENT_ID=system
+    DISCOVERY_COLLECTION_ID=news
     DISCOVERY_VERSION=2016-11-07
     ```
 
@@ -124,7 +98,6 @@ Verify the application is working correctly by running `./analysis.sh -h`. This 
       -V, --version            output the version number
       -n, --name [name]        person name.
       -d, --dir [dir]          Directory to output results to.
-      -q, --quotes [quotes]    Use Watson Discovery Service to find quotes.
       -p, --personality        Use Watson Personality Insights.
   ```
 Use the `-n` flag to pass in a name to search on. Use the -`d` flag to specify a relative directory to write the results to. The following query will analyse the News dataset for articles about the tennis player Roger Federer:
@@ -278,3 +251,8 @@ The project needs to be configured to work with your instances of the Watson Ser
   npm install
   ./analysis.sh -h
   ```
+
+
+
+  ### TEMP DARREN
+  filter(enriched_text.categories.label:/sports/tennis).term(author, count:100)

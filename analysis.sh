@@ -8,12 +8,16 @@ program
   .version('1.0.0')
   .description('Cognitive analysis of Watson Discovery News data.')
   .option('-a, --author [author]', 'Authors.')
+  .option('-c, --category [category]', 'category to list authors for, e.g. /sports/tennis')
   .option('-p, --person [person]', 'Persons name.')
   .option('-d, --dir [dir]', 'Directory to output results to.')
   .parse(process.argv);
 
 if(program.dir !== true && program.dir){
-  if(program.person && !program.author){
+  if(program.category){
+    analysisName.listAuthors(program.category, program.dir)
+  }
+  else if(program.person && !program.author){
     analysisName.aggregateSentiment(program.person, false, program.dir);
   }
   else if(program.person && program.author){

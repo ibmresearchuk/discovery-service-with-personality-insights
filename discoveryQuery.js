@@ -90,6 +90,46 @@ function getHitsByAuthor(name, author, callback){
 }
 
 
+/**
+ * Query Watson Discovery Service to get results
+ * @param {String} name - The names a player goes by ('Rafael Nadal').
+ * @param {requestCallback} callback - Callback.
+ */
+function getAuthorsByCateogory(category, callback){
+  console.log('getting authors for category ' + category);
+
+  //Discovery Service query string
+  queryObject.qs = {
+    version: process.env.DISCOVERY_VERSION,
+    aggregation: 'filter(enriched_text.categories.label:'+category+').'
+                + 'term(author, count:1000)',
+    count:0
+  };
+
+
+  request(queryObject, handleResponse);
+
+  // Callback from request to handle HTTP response
+  function handleResponse(err, httpResponse, body){
+    //console.dir(body);
+    if(err){
+      console.log(err);
+      return callback(err);
+    }
+    else{
+      //console.dir(body);
+      var aggregations = [];
+      if(body){
+        var jsonBody = JSON.parse(body);
+        if(jsonBody.aggregations &&  jsonBody.aggregations[0].aggregations && jsonBody.aggregations[0].aggregations[0].results){
+          aggregations = jsonBody.aggregations[0].aggregations[0].results;
+        }
+      }
+      return callback(false, aggregations);
+    }
+  };
+}
+
 
 /**
  * Query Watson Discovery Service to get results
@@ -145,6 +185,7 @@ function getSentimentByAuthor(name, author, callback){
 
 module.exports = {
   getHits:getHits,
+  getAuthorsByCateogory: getAuthorsByCateogory,
   getHitsByAuthor:getHitsByAuthor,
   getSentimentByAuthor: getSentimentByAuthor
 };

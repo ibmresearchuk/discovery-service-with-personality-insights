@@ -2,6 +2,45 @@ var discoveryQuery = require('./discoveryQuery');
 var utils = require('./utils');
 
 
+
+/**
+ * Analyse person
+ * @param {String} catgeory - category to list authors for
+*/
+function listAuthors(category, dir){
+
+  // Analyse hits about a person
+  discoveryQuery.getAuthorsByCateogory(category, writeResultToFile);
+
+  //Callback from getAuthorsByCateogory to write results to file
+  function writeResultToFile(err, data){
+    if(err){
+      console.log(err);
+    }
+    else if(dir){
+      // Uncomment to output personality insights to to console.
+      //console.dir(data);
+
+      var processedData = [];
+      for(var i=0; i < data.length; i++){
+        var item = {
+          author: data[i].key,
+          documents: data[i].matching_results
+        };
+        processedData.push(item);
+      }
+
+      // Write data to file as CSV
+      utils.writeCsvDataTofile(dir + '/categories.csv', processedData, ['author','documents'], function(writeErr){
+        if(writeErr){
+          console.log(writeErr);
+        }
+      });
+    }
+  };
+}
+
+
 /**
  * Analyse person
  * @param {String} name - person name
@@ -20,11 +59,10 @@ function aggregateSentiment(name, author, dir){
     }
     else if(dir){
       // Uncomment to output personality insights to to console.
-      //console.dir(data);
+      console.dir(data);
       processedData = {
         name: name
       };
-
 
       for(var i=0; i < data.length; i++){
         var field = data[i].key;
@@ -40,7 +78,6 @@ function aggregateSentiment(name, author, dir){
       });
     }
   };
-
 }
 
 
@@ -136,5 +173,6 @@ function analyseHits(name, author, callback){
 
 module.exports = {
   analyse: analyse,
+  listAuthors:listAuthors,
   aggregateSentiment: aggregateSentiment
 };

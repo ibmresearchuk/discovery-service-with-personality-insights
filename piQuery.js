@@ -21,13 +21,13 @@ var queryObject = {
  * @param {String[]} names - The names a player goes by (e.g. ['Rafael Nadal', 'nadal', 'raffa']).
  * @param {requestCallback} callback - Callback.
  */
-function analysePersonality(name, callback){
+function analysePersonality(author, callback){
   // Create variables to hold results
   var contentList = [];
   var contentObject = {};
 
   // Call discoveryQuery.getQuotes to query Watson Discovery Service(WDS) to get quotes
-  discoveryQuery.getQuotes(name, getPersonalityInsight);
+  discoveryQuery.getTextsByAuthor(author, getPersonalityInsight);
 
   // Callback from discoveryQuery.getQuotes to organise results from WDS
   function getPersonalityInsight( quoteErr, quoteData){
@@ -36,28 +36,10 @@ function analysePersonality(name, callback){
       return callback(quoteErr);
     }
     else{
-      // Check data have been returned from Watson Personality Insights.
-      if(quoteData){
-        for(var i=0; i < quoteData.length; i++){
-          // Check each data has an entitity property
-          for(var j=0; j<quoteData[i].entities.length; j++){
-            if(quoteData[i].entities[j].quotations){
-              // Check each entitity has a quotations property
-              for(var k=0; k<quoteData[i].entities[j].quotations.length; k++){
-                if (quoteData[i].entities[j].quotations[k].quotation){
-                  // Update contentObject with quotation
-                  var contentObject = {
-                    content: quoteData[i].entities[j].quotations[k].quotation,
-                  };
-                  // Push contentObject with quotation to contentList
-                  contentList.push(contentObject);
-                }
-              }
-            }
-          }
-        }
+      var contentList = [];
+      for(var i=0; i < quoteData.length; i++){
+        contentList.push(quoteData[i].text);
       }
-
       // Personality Insights json object containing quotes
       queryObject.json = {
         contentItems: contentList

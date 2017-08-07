@@ -51,21 +51,18 @@ function getHits(name, callback){
 
 /**
  * Query Watson Discovery Service to get results
- * @param {String} name - The names a player goes by ('Rafael Nadal').
  * @param {String} author - The author of the article
  * @param {requestCallback} callback - Callback.
  */
-function getHitsByAuthor(name, author, callback){
-  console.log('searching wds for ' + name);
+function getTextsByAuthor(author, callback){
 
   //Discovery Service query string
   queryObject.qs = {
     version: process.env.DISCOVERY_VERSION,
-    query: 'enriched_text.entities.text:'+name+','
-          +'author:'+author,
-    filter: 'enriched_text.entities.type:Person',
+    query: 'author:'+author,
     sort: '-publication_date',
     count: 50,
+    return: 'text'
   };
 
   request(queryObject, handleResponse);
@@ -101,8 +98,8 @@ function getAuthorsByCateogory(category, callback){
   //Discovery Service query string
   queryObject.qs = {
     version: process.env.DISCOVERY_VERSION,
-    aggregation: 'filter(enriched_text.categories.label:'+category+').'
-                + 'term(author, count:1000)',
+    aggregation: 'filter(enriched_text.categories.label::'+category+').'
+                + 'term(author, count:50)',
     count:0
   };
 
@@ -111,16 +108,15 @@ function getAuthorsByCateogory(category, callback){
 
   // Callback from request to handle HTTP response
   function handleResponse(err, httpResponse, body){
-    //console.dir(body);
     if(err){
       console.log(err);
       return callback(err);
     }
     else{
-      //console.dir(body);
       var aggregations = [];
       if(body){
         var jsonBody = JSON.parse(body);
+        //console.dir(jsonBody,{depth:6});
         if(jsonBody.aggregations &&  jsonBody.aggregations[0].aggregations && jsonBody.aggregations[0].aggregations[0].results){
           aggregations = jsonBody.aggregations[0].aggregations[0].results;
         }
@@ -138,28 +134,36 @@ function getAuthorsByCateogory(category, callback){
  * @param {requestCallback} callback - Callback.
  */
 function getSentimentByAuthor(name, author, callback){
-  console.log('aggregating wds for ' + name);
+  console.log('aggregating wds for ' + name + ' by ' + author);
 
   //Discovery Service query string
-  if(!author){
+  if(name && author){
     queryObject.qs = {
       version: process.env.DISCOVERY_VERSION,
       aggregation: 'filter(enriched_text.entities.text:'+name+','
-                  + 'enriched_text.entities.type:Person).'
-                  + 'term(enriched_text.sentiment.document.label)',
+                  + 'author::'+author+')'
+                  + '.term(enriched_text.sentiment.document.label)',
+      count:0
+    };
+  }
+  else if(name){
+    queryObject.qs = {
+      version: process.env.DISCOVERY_VERSION,
+      aggregation: 'filter(enriched_text.entities.text:'+name+')'
+                 + '.term(enriched_text.sentiment.document.label)',
       count:0
     };
   }
   else{
     queryObject.qs = {
       version: process.env.DISCOVERY_VERSION,
-      aggregation: 'filter(enriched_text.entities.text:'+name+','
-                  + 'author:'+author+','
-                  + 'enriched_text.entities.type:Person).'
-                  + 'term(enriched_text.sentiment.document.label)',
+      aggregation: 'filter(author::'+author+')'
+                  + '.term(enriched_text.sentiment.document.label)',
       count:0
     };
   }
+
+  console.dir(queryObject.qs);
 
   request(queryObject, handleResponse);
 
@@ -183,9 +187,9 @@ function getSentimentByAuthor(name, author, callback){
   };
 }
 
+
 module.exports = {
-  getHits:getHits,
   getAuthorsByCateogory: getAuthorsByCateogory,
-  getHitsByAuthor:getHitsByAuthor,
-  getSentimentByAuthor: getSentimentByAuthor
+  getSentimentByAuthor: getSentimentByAuthor,
+  getTextsByAuthor: getTextsByAuthor
 };

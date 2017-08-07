@@ -71,7 +71,17 @@ function aggregateSentiment(name, author, dir){
       }
 
       // Write data to file as CSV
-      utils.writeCsvDataTofile(dir + '/' + name + '.csv',processedData, ['name','negative','positive','neutral'], function(writeErr){
+      var filename;
+      if(author && name){
+        filename = author + '_' + name;
+      }
+      else if(author){
+        filename = author + '_all';
+      }
+      else{
+        filename = 'all_'+name;
+      }
+      utils.writeCsvDataTofile(dir + '/' + filename + '.csv',processedData, ['negative','positive','neutral'], function(writeErr){
         if(writeErr){
           console.log(writeErr);
         }

@@ -152,13 +152,14 @@ Search and structure parameters determine what data is returned:
 - filter: A cacheable query that excludes any documents that don't mention the query content. Filter search results are not returned in order of relevance.
 - query: A query search returns all documents in your data set with full enrichments and full text in order of relevance. A query also excludes any documents that don't mention the query content.
 - count: The number of documents that you want returned in the response.
+- aggregation: an aggregation query returns the result of an operation on a set of documents
 
 More details on query strings can be found [here](https://www.ibm.com/watson/developercloud/doc/discovery/query-reference.html).
 
 ## Using Personality insights
-The IBM Watson&trade; Personality Insights service allows applications to derive insights about personality characteristics from social media, enterprise data, or other digital communications. This application can be used to analyse the personality of an individual using IBM Watson&trade; Personality Insights based on quotes retrieved from the IBM Watson&trade; Discovery service
+The IBM Watson&trade; Personality Insights service allows applications to derive insights about personality characteristics from social media, enterprise data, or other digital communications.
 
-To use the IBM Watson&trade; Discovery Service together with the IBM Watson&trade; Personality Insights service, complete the following steps in addition to the Prerequisites steps stated above:
+To use the IBM Watson&trade; Discovery Service together with the IBM Watson&trade; Personality Insights service, complete the following steps in addition to the initial prerequisites above:
 1. Connect to Bluemix with the command line tool.
 
     ```sh
@@ -196,19 +197,20 @@ To use the IBM Watson&trade; Discovery Service together with the IBM Watson&trad
 
 Get more help [Getting started with the Personality Insights API](https://www.ibm.com/watson/developercloud/doc/personality-insights/getting-started.html)
 
-Use the `-p` flag with the `-q` flag to analyse the personality of a particular person. The following query will retrieve quotes  from the Watson Discovery New dataset about the tennis player Roger Federer, before sending them to your instance of the Personality Insights service:
+Use the "personality" command to analyse the personality of a specific author. The following command will find articles written by the author "Tennis World", send them to your instance of Personality Insights and output the personality attributes that the service finds..
 
-  ```sh
-  ./analysis.sh -n Federer -d results -q -p
-  ```
-The analysis of this query have been output as comma separated values to `results/Federer.csv`.
+```sh
+  ./analysis.sh personality "Tennis World" data/personality
+```
+
+The analysis of this query have been output as comma separated values to `data/personality/personality_tennis_world.csv`.
 
   ```none
-  "name","openness","emotionalRange","conscientiousness","agreeableness","extraversion"
-  "federer",0.31142288181635164,0.755908433280148,0.8428408846691722,0.010573124252825084,0.0022307444673070886
+    "openness","emotionalRange","conscientiousness","agreeableness","extraversion"
+    "0.31142288181635164,0.755908433280148,0.8428408846691722,0.010573124252825084,0.0022307444673070886
   ```
 
-The application has analysed the personality of the quotes found about `Federer` using the Personality Insights service and provided values for the [Big Five](https://www.ibm.com/watson/developercloud/doc/personality-insights/models.html#outputBigFive) personality characteristics. The percentile returned for each characteristic reports the `Federer's` normalized score for that characteristic; the Personality Insights service computes the percentile by comparing the author's results with the results from a sample population.
+The application has analysed the personality of articles written by "Tennis World" using the Personality Insights service and provided values for the [Big Five](https://www.ibm.com/watson/developercloud/doc/personality-insights/models.html#outputBigFive) personality characteristics. The percentile returned for each characteristic reports the author's normalized score for that characteristic; the Personality Insights service computes the percentile by comparing the author's results with the results from a sample population.
 
 
 # Using Vagrant to run this application

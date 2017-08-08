@@ -10,44 +10,6 @@ var queryObject = {
   }
 };
 
-/**
- * Query Watson Discovery Service to get results
- * @param {String[]} names - The names a player goes by (e.g. ['Rafael Nadal', 'nadal', 'raffa']).
- * @param {requestCallback} callback - Callback.
- */
-function getHits(name, callback){
-  console.log('searching wds for ' + name);
-
-  //Discovery Service query string
-  queryObject.qs = {
-    version: process.env.DISCOVERY_VERSION,
-    query: 'enriched_text.entities.text:('+name+')',
-    filter: 'enriched_text.entities.type:Person',
-    sort: '-publication_date',
-    count: 50,
-  };
-
-  request(queryObject, handleResponse);
-
-  // Callback from request to handle HTTP response
-  function handleResponse(err, httpResponse, body){
-    if(err){
-      console.log(err);
-      return callback(err);
-    }
-    else{
-      var results = [];
-      if(body){
-        var jsonBody = JSON.parse(body);
-        if(jsonBody.results){
-          results = jsonBody.results;
-        }
-      }
-      return callback(false, results);
-    }
-  };
-}
-
 
 /**
  * Query Watson Discovery Service to get results

@@ -82,51 +82,46 @@ The following additional metadata is also added: crawl date, publication date, U
 This application demonstrates how Watson Discovery Service can be used to query the Watson Discovery News dataset to find articles or quotes about a person. The sentiment of the documents retrieved are analysed using the pre-enriched with cognitive insights added to News dataset. These results are then output to a file.
 
 To use this application, run `npm install` to install the required node.js packages:
-  ```sh
+
+```sh
   npm install
-  ```
+```
 Verify the application is working correctly by running `./analysis.sh -h`. This should output the following help about the app:
 
-  ```sh
-    Usage: analysis.sh [options]
+```sh
+  Usage: analysis.sh [options] [command]
 
-    Cognitive analysis of Watson Discovery News data.
+  Options:
 
-    Options:
-
-      -h, --help               output usage information
-      -V, --version            output the version number
-      -n, --name [name]        person name.
-      -d, --dir [dir]          Directory to output results to.
-      -p, --personality        Use Watson Personality Insights.
-  ```
-Use the `-n` flag to pass in a name to search on. Use the -`d` flag to specify a relative directory to write the results to. The following query will analyse the News dataset for articles about the tennis player Roger Federer:
-  ```sh
-  ./analysis.sh -n Federer -d results
-  ```
-The analysis of this query have been output as comma separated values to `results/Federer.csv`.
-  ```none
-  "name","hits","hits_negative","hits_positive","hits_neutral"
-  "federer",50,14,28,8
-  ```
-The application has analysed the sentiment of each articles found about `Federer`. In total, there were 50 hits found, 14 of these had a negative sentiment, 28 had a positive sentiment and 8 had a neutral sentiment.
+  -V, --version  output the version number
+  -h, --help     output usage information
 
 
+  Commands:
 
-Use the `-q` flag to look for quotes about a particular person. The following query will analyse the News dataset for quotes about the tennis player Roger Federer:
+  authors <category> <dir>  
+  personality <author> <dir>
+  sentiment <author> <dir>  
+```
 
-  ```sh
-  ./analysis.sh -n Federer -d results -q
-  ```
-The analysis of this query have been output as comma separated values to `results/Federer.csv`.
-  ```none
-  "name","hits","hits_negative","hits_positive","hits_neutral"
-  "federer",65,19,0,46
-  ```
+The command `authors` will find the top authors for a given category, `sentiment` and `personality` will analyse the personality or sentiment of a given author.  All commands require a directory path for the output to be written to.
 
-The application has analysed the sentiment of each quote found about `Federer`. In total, there were 65 quotes found, 19 of these had a negative sentiment, zero had a positive sentiment and 46 had a neutral sentiment.
+The following command will find the top authors for news articles in the /sports/tennis category:
+```sh
+  ./analysis.sh authors /sports/tennis data/authors
+```
 
-To output the quotes returned from Watson Discovery Service to the console, uncomment `console.dir(data);` on Line 22 in `analysis-quotes.js`.
+The following command will analyse the news dataset for the mean sentiment for articles written by "Tennis World":
+
+```sh
+  ./analysis.sh sentiment "Tennis World" data/sentiment
+```
+
+The following command will analyse the news dataset for the personality of the author "Tennis World":
+
+```sh
+  ./analysis.sh personality "Tennis World" data/personality
+```
 
 ### How Watson Discovery Service works
 The IBM Watson&trade;Discovery service offers powerful content search capabilities using the [Discovery Query Language](https://www.ibm.com/watson/developercloud/doc/discovery/query-reference.html). In this application, a query object is formed in `discoveryQuery.js`, before using the node.js `request` library to send an HTTP GET to the specified endpoint:
@@ -157,25 +152,6 @@ Search and structure parameters determine what data is returned:
 - filter: A cacheable query that excludes any documents that don't mention the query content. Filter search results are not returned in order of relevance.
 - query: A query search returns all documents in your data set with full enrichments and full text in order of relevance. A query also excludes any documents that don't mention the query content.
 - count: The number of documents that you want returned in the response.
-
-Entity Extraction enrichment extracts persons, places, and organizations in the input text. The above query string filters for articles with the entity type `Person` and then searches for articles with the parameter `name` in the entity text. The `name` parameter has been passed in at the command line. Fifty results are return from Watson Discovery service, as specified by `count: 50`.
-
-To retrieve quotes the query string looks like this:
-
-  ```javascript
-  queryObject.qs = {
-    version: process.env.DISCOVERY_VERSION,
-    query: 'entities.text:('+name+')',
-    filter: 'entities.type:Person,'
-          + 'entities.quotations.sentiment.type::(neutral|positive|negative)',
-    return: 'entities.quotations,'
-          + 'entities.text,'
-          + 'quotations.quotation,'
-          + 'entities.type',
-    count: 50
-  };
-  ```
-In this case the query string filters for articles with the entity type `Person` and `quotations` with a `sentiment`. Only a subsection of each result is returned as specified by `return:`.
 
 More details on query strings can be found [here](https://www.ibm.com/watson/developercloud/doc/discovery/query-reference.html).
 
@@ -234,7 +210,6 @@ The analysis of this query have been output as comma separated values to `result
 
 The application has analysed the personality of the quotes found about `Federer` using the Personality Insights service and provided values for the [Big Five](https://www.ibm.com/watson/developercloud/doc/personality-insights/models.html#outputBigFive) personality characteristics. The percentile returned for each characteristic reports the `Federer's` normalized score for that characteristic; the Personality Insights service computes the percentile by comparing the author's results with the results from a sample population.
 
-To output the quotes returned from Watson Discovery Service to the console, uncomment `console.dir(data);` on Line 22 in `analysis-quotes.js`.
 
 # Using Vagrant to run this application
 A vagrant file in this project creates a Virtual Machine configured to run this project.
@@ -251,8 +226,3 @@ The project needs to be configured to work with your instances of the Watson Ser
   npm install
   ./analysis.sh -h
   ```
-
-
-
-  ### TEMP DARREN
-  filter(enriched_text.categories.label:/sports/tennis).term(author, count:100)

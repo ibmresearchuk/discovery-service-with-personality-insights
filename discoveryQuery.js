@@ -133,37 +133,16 @@ function getAuthorsByCateogory(category, callback){
  * @param {String} author - The author of the article
  * @param {requestCallback} callback - Callback.
  */
-function getSentimentByAuthor(name, author, callback){
-  console.log('aggregating wds for ' + name + ' by ' + author);
+function getSentimentByAuthor(author, callback){
+  console.log('analyse wds sentiment by author:' + author);
 
   //Discovery Service query string
-  if(name && author){
-    queryObject.qs = {
-      version: process.env.DISCOVERY_VERSION,
-      aggregation: 'filter(enriched_text.entities.text:'+name+','
-                  + 'author::'+author+')'
-                  + '.term(enriched_text.sentiment.document.label)',
-      count:0
-    };
-  }
-  else if(name){
-    queryObject.qs = {
-      version: process.env.DISCOVERY_VERSION,
-      aggregation: 'filter(enriched_text.entities.text:'+name+')'
-                 + '.term(enriched_text.sentiment.document.label)',
-      count:0
-    };
-  }
-  else{
-    queryObject.qs = {
-      version: process.env.DISCOVERY_VERSION,
-      aggregation: 'filter(author::'+author+')'
-                  + '.term(enriched_text.sentiment.document.label)',
-      count:0
-    };
-  }
-
-  console.dir(queryObject.qs);
+  queryObject.qs = {
+    version: process.env.DISCOVERY_VERSION,
+    aggregation: 'filter(author::'+author+')'
+                + '.term(enriched_text.sentiment.document.label)',
+    count:0
+  };
 
   request(queryObject, handleResponse);
 

@@ -5,32 +5,24 @@ var analysisName = require('./analysis-name');
 var analysisPersonality = require('./analysis-personality');
 
 program
-  .version('1.0.0')
-  .description('Cognitive analysis of Watson Discovery News data.')
-  .option('-a, --author [author]', 'Authors.')
-  .option('-c, --category [category]', 'category to list authors for, e.g. /sports/tennis')
-  .option('-p, --person [person]', 'Persons name.')
-  .option('-i, --insights', 'Analyse for personality')
-  .option('-d, --dir [dir]', 'Directory to output results to.')
-  .parse(process.argv);
+  .version('1.0.0');
 
-if(program.dir !== true && program.dir){
-  if(program.category){
-    analysisName.listAuthors(program.category, program.dir)
-  }
-  else if(program.insights && program.author){
-    analysisPersonality.analyse(program.author, program.dir);
-  }
-  else if(!program.person && program.author){
-    analysisName.aggregateSentiment(false, program.author, program.dir);
-  }
-  else if(program.person && !program.author){
-    analysisName.aggregateSentiment(program.person, false, program.dir);
-  }
-  else if(program.person && program.author){
-    analysisName.aggregateSentiment(program.person, program.author, program.dir);
-  }
-}
-else{
-  console.log('Please specificy a directory');
-}
+program.command('authors <category> <dir>')
+  .action(function (category, dir){
+    console.log('list categories %s %s', category, dir);
+    analysisName.listAuthors(category, dir)
+});
+
+program.command('personality <author> <dir>')
+  .action(function (author, dir) {
+    console.log('personality %s', dir);
+    analysisPersonality.analyse(author, dir);
+});
+
+program.command('sentiment <author> <dir>')
+  .action(function (author, dir){
+    console.log('sentiment %s', dir);
+    analysisName.aggregateSentiment(author, dir);
+});
+
+program.parse(process.argv);

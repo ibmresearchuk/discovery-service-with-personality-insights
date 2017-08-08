@@ -10,7 +10,7 @@ function analyse(author, dir){
   console.log('Analysing personality using Watson Personality Insights. \nRunning analysis on Watson Discovery News data and retrieving quotes. Querying ' + author + '. Results output to: ' + dir+'/' + author + '.csv');
 
   // Analyse personality from quotes about a person
-  analysePersonalityFromQuotes(author, writeResultToFile);
+  analysePersonalityByAuthor(author, writeResultToFile);
 
   //Callback from analysePersonalityFromQuotes to write result to file
   function writeResultToFile(err, data){
@@ -19,8 +19,9 @@ function analyse(author, dir){
     }
     else if(dir){
       // Write Big five personality characteristic data to file as CSV
-      utils.writeCsvDataTofile(dir + '/' + author + '.csv', data, [
-        'name',
+      var filename = 'personality_' + author.replace(/ /g, '_');
+      filename = filename.toLowerCase();
+      utils.writeCsvDataTofile(dir + '/' + filename + '.csv', data, [
         'openness',
         'emotionalRange',
         'conscientiousness',
@@ -36,12 +37,13 @@ function analyse(author, dir){
   };
 }
 
+
 /**
  * Analyse personality from quotes about a person
  * @param {String} author - The author of a quotes
  * @param {requestCallback} callback - Callback.
  */
-function analysePersonalityFromQuotes(author, callback){
+function analysePersonalityByAuthor(author, callback){
   // Create variable to hold result
   var processedResults = {
     emotionalRange: 0,
@@ -69,7 +71,6 @@ function analysePersonalityFromQuotes(author, callback){
           console.log('Error in personality for: ' + author + ' ' + data.error);
         }
         else{
-          console.dir(data);
           if(data.personality){
             // Assign personality Attributes to results object
             for(var i=0; i < data.personality.length; i++){
@@ -98,6 +99,7 @@ function analysePersonalityFromQuotes(author, callback){
     }
   };
 }
+
 
 module.exports = {
   analyse: analyse

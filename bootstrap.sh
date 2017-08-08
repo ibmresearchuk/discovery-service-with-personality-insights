@@ -4,7 +4,7 @@
 apt-get update
 
 apt-get install unzip -y
-apt-get install g++ =y
+apt-get install g++ -y
 
 # nodejs install
 apt-get install -y curl

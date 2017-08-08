@@ -65,7 +65,7 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
     DISCOVERY_PASSWORD=<password>
     DISCOVERY_ENVIRONMENT_ID=system
     DISCOVERY_COLLECTION_ID=news
-    DISCOVERY_VERSION=2016-11-07
+    DISCOVERY_VERSION=2017-08-01
     ```
 
 Get more help [Getting started with the Discovery API](https://www.ibm.com/watson/developercloud/doc/discovery/getting-started.html)
@@ -79,7 +79,7 @@ This indexed dataset is pre-enriched with the following cognitive insights: Keyw
 The following additional metadata is also added: crawl date, publication date, URL ranking, host rank, and anchor text. Historical search is available for the past 60 days of news data.
 
 ## Using the Watson Discovery Service
-This application demonstrates how Watson Discovery Service can be used to query the Watson Discovery News dataset to find articles or quotes about a person. The sentiment of the documents retrieved are analysed using the pre-enriched with cognitive insights added to News dataset. These results are then output to a file.
+This application demonstrates how Watson Discovery Service can be used to query the Watson Discovery News dataset to analyse authors of sports articles.
 
 To use this application, run `npm install` to install the required node.js packages:
 
@@ -116,15 +116,8 @@ The following command will analyse the news dataset for the mean sentiment for a
 ```sh
   ./analysis.sh sentiment "Tennis World" data/sentiment
 ```
-
-The following command will analyse the news dataset for the personality of the author "Tennis World":
-
-```sh
-  ./analysis.sh personality "Tennis World" data/personality
-```
-
 ### How Watson Discovery Service works
-The IBM Watson&trade;Discovery service offers powerful content search capabilities using the [Discovery Query Language](https://www.ibm.com/watson/developercloud/doc/discovery/query-reference.html). In this application, a query object is formed in `discoveryQuery.js`, before using the node.js `request` library to send an HTTP GET to the specified endpoint:
+The IBM Watson&trade; Discovery service offers powerful content search capabilities using the [Discovery Query Language](https://www.ibm.com/watson/developercloud/doc/discovery/query-reference.html). In this application, a query object is formed in `discoveryQuery.js`, before using the node.js `request` library to send an HTTP GET to the specified endpoint:
 
   ```javascript
   var queryUri = 'https://gateway.watsonplatform.net/discovery/api/v1/environments/'+process.env.DISCOVERY_ENVIRONMENT_ID+'/collections/'+process.env.DISCOVERY_COLLECTION_ID+'/query';
@@ -170,7 +163,7 @@ To use the IBM Watson&trade; Discovery Service together with the IBM Watson&trad
 1. Create the Personality Insights service in Bluemix (if you have a trial account, replace `tiered` with `lite`)
 
     ```sh
-    bx service create personality_insights tiered my-personality-insights-service
+    bx service create personality_insights lite my-personality-insights-service
     ```
 
 1. Create and retrieve service keys to access your instance of the Personality Insights service:
@@ -188,7 +181,7 @@ To use the IBM Watson&trade; Discovery Service together with the IBM Watson&trad
     DISCOVERY_ENVIRONMENT_ID=<environment_id>
     DISCOVERY_COLLECTION_ID=<collection_id>
     DISCOVERY_CONFIGURATION_ID=<configuration_id>
-    DISCOVERY_VERSION=2016-11-07
+    DISCOVERY_VERSION=2017-08-01
     PERSONALITY_URL=https://gateway.watsonplatform.net/personality-insights/api/v3/profile
     PERSONALITY_USERNAME=<personality-insights-serivce-username>
     PERSONALITY_PASSWORD=<personality-insights-serivce-password>

@@ -19,7 +19,7 @@ function analyse(author, dir){
     }
     else if(dir){
       // Write Big five personality characteristic data to file as CSV
-      utils.writeCsvDataTofile(dir + '/' + author + '.csv',data, [
+      utils.writeCsvDataTofile(dir + '/' + author + '.csv', data, [
         'name',
         'openness',
         'emotionalRange',

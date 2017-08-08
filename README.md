@@ -223,7 +223,7 @@ The project needs to be configured to work with your instances of the Watson Ser
 
   ```sh
   vagrant up
-  ssh vagrant
+  vagrant ssh
   cd /vagrant
   npm install
   ./analysis.sh -h

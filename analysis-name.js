@@ -8,9 +8,9 @@ var utils = require('./utils');
 */
 function listAuthors(category, dir){
   // Analyse hits about a person
-  discoveryQuery.getAuthorsByCateogory(category, writeResultToFile);
+  discoveryQuery.getAuthorsByCategory(category, writeResultToFile);
 
-  //Callback from getAuthorsByCateogory to write results to file
+  //Callback from getAuthorsByCategory to write results to file
   function writeResultToFile(err, data){
     if(err){
       console.log(err);

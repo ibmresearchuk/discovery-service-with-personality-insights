@@ -54,7 +54,7 @@ function getTextsByAuthor(author, callback){
  * @param {String} name - The names a player goes by ('Rafael Nadal').
  * @param {requestCallback} callback - Callback.
  */
-function getAuthorsByCateogory(category, callback){
+function getAuthorsByCategory(category, callback){
   console.log('getting authors for category ' + category);
 
   //Discovery Service query string
@@ -130,7 +130,7 @@ function getSentimentByAuthor(author, callback){
 
 
 module.exports = {
-  getAuthorsByCateogory: getAuthorsByCateogory,
+  getAuthorsByCategory: getAuthorsByCategory,
   getSentimentByAuthor: getSentimentByAuthor,
   getTextsByAuthor: getTextsByAuthor
 };

@@ -60,8 +60,7 @@ function getAuthorsByCateogory(category, callback){
   //Discovery Service query string
   queryObject.qs = {
     version: process.env.DISCOVERY_VERSION,
-    aggregation: 'filter(enriched_text.categories.label::'+category+').'
-                + 'term(author, count:50)',
+    aggregation: '',
     count:0
   };
 

@@ -13,3 +13,4 @@ node_modules
 .env
 .vagrant
 results
+data

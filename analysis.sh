@@ -9,7 +9,7 @@ program
 
 program.command('authors <category> <dir>')
   .action(function (category, dir){
-    console.log('list categories %s %s', category, dir);
+    console.log('list authors for %s into %s', category, dir);
     analysisName.listAuthors(category, dir)
 });
 

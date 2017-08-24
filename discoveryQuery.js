@@ -17,6 +17,7 @@ var queryObject = {
  * @param {requestCallback} callback - Callback.
  */
 function getTextsByAuthor(author, callback){
+  console.log('getting text by author for ' + author);
 
   //Discovery Service query string
   queryObject.qs = {

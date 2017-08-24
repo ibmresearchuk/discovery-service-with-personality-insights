@@ -49,6 +49,7 @@ function analysePersonality(author, callback){
 
       // Callback from request to handle HTTP response
       function handleResponse(err, httpResponse, body){
+        console.dir(body);
         if(err){
           return callback(err);
         }

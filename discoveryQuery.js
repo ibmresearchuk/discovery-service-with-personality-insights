@@ -56,7 +56,7 @@ function getTextsByAuthor(author, callback){
  * @param {requestCallback} callback - Callback.
  */
 function getAuthorsByCategory(category, callback){
-  console.log('getting authors for category ' + category);
+  console.log('getting authors for category:' + category);
 
   //Discovery Service query string
   queryObject.qs = {
@@ -65,6 +65,7 @@ function getAuthorsByCategory(category, callback){
     count:0
   };
 
+  //console.dir(queryObject.qs);
 
   request(queryObject, handleResponse);
 

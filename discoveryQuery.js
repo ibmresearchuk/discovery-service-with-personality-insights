@@ -55,13 +55,13 @@ function getTextsByAuthor(author, callback){
  * @param {String} name - The names a player goes by ('Rafael Nadal').
  * @param {requestCallback} callback - Callback.
  */
-function getAuthorsByCateogory(category, callback){
+function getAuthorsByCategory(category, callback){
   console.log('getting authors for category ' + category);
 
   //Discovery Service query string
   queryObject.qs = {
     version: process.env.DISCOVERY_VERSION,
-    aggregation: '',
+    aggregation: 'filter(enriched_text.categories.label::'+category+').term(author, count:50)',
     count:0
   };
 
@@ -130,7 +130,7 @@ function getSentimentByAuthor(author, callback){
 
 
 module.exports = {
-  getAuthorsByCateogory: getAuthorsByCateogory,
+  getAuthorsByCategory: getAuthorsByCategory,
   getSentimentByAuthor: getSentimentByAuthor,
   getTextsByAuthor: getTextsByAuthor
 };

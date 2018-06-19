@@ -2,14 +2,14 @@
 IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data. This node.js application demonstrates how the Discovery API can be used to build queries and perform cognitive analysis using the Watson Discovery News dataset.
 
 ## Prerequisites
-1. A Bluemix account. If you don't have one, [sign up](https://console.eu-gb.bluemix.net/registration/).
+1. An IBM Cloud account. If you don't have one, [sign up](https://console.eu-gb.bluemix.net/registration/).
 
 2. node.js (alternatively, this project can run using [Vagrant](https://www.vagrantup.com). A Vagrant file has been provided which creates a Virtual Machine configured to run this project.)
 
 ## Getting started
 1. Download this project using `git clone`.
 1. Download and install the [Cloud-foundry CLI](https://github.com/cloudfoundry/cli) tool if you haven't already.
-1. Connect to Bluemix with the command line tool.
+1. Connect to IBM Cloud with the command line tool.
 
     ```sh
     bx api https://api.eu-gb.bluemix.net
@@ -37,14 +37,14 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
     DISCOVERY_ENVIRONMENT_ID=
     DISCOVERY_COLLECTION_ID=
     DISCOVERY_CONFIGURATION_ID=
-    DISCOVERY_VERSION=2017-08-01
+    DISCOVERY_VERSION=
     ```
 
 
 1. Use the `GET /v1/environments/system/collections` method to get the collection ID and configuration ID of your Watson News Environment instance.
 
     ```sh
-    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/system/collections?version=2017-08-01"
+    curl -X GET -u "{username}":"{password}" "https://gateway.watsonplatform.net/discovery/api/v1/environments/system/collections?version=2018-03-05"
     ```
     ```sh
       {
@@ -68,7 +68,7 @@ IBM Watson&trade; Discovery Service unlocks insights hidden in unstructured data
     DISCOVERY_VERSION=2017-08-01
     ```
 
-Get more help [Getting started with the Discovery API](https://www.ibm.com/watson/developercloud/doc/discovery/getting-started.html)
+Get more help [Getting started with the Discovery API](https://console.bluemix.net/docs/services/discovery/getting-started.html#getting-started-with-the-api)
 
 ## About Watson Discovery News
 
@@ -153,14 +153,14 @@ More details on query strings can be found [here](https://www.ibm.com/watson/dev
 The IBM Watson&trade; Personality Insights service allows applications to derive insights about personality characteristics from social media, enterprise data, or other digital communications.
 
 To use the IBM Watson&trade; Discovery Service together with the IBM Watson&trade; Personality Insights service, complete the following steps in addition to the initial prerequisites above:
-1. Connect to Bluemix with the command line tool.
+1. Connect to IBM Cloud with the command line tool.
 
     ```sh
     bx api https://api.eu-gb.bluemix.net
     bx login -u <your user ID>
     ```
 
-1. Create the Personality Insights service in Bluemix (if you have a trial account, replace `tiered` with `lite`)
+1. Create the Personality Insights service in IBM Cloud (if you have a trial account, replace `tiered` with `lite`)
 
     ```sh
     bx service create personality_insights lite my-personality-insights-service
@@ -210,7 +210,7 @@ The application has analysed the personality of articles written by "Tennis Worl
 A vagrant file in this project creates a Virtual Machine configured to run this project.
 ## Prerequisites
 1. [Vagrant](https://www.vagrantup.com)
-2. Instances of Watson Services running on Bluemix.
+2. Instances of Watson Services running on IBM Cloud.
 
 The project needs to be configured to work with your instances of the Watson Services.  Rename ````.env.template```` to ````.env```` and edit the properties in the file to point at your Watson service instances.
 
